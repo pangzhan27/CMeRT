@@ -908,7 +908,7 @@ def compute_point_level_accuracies(y_true, y_pred, threshold = 0, bg_class = Non
         p_start = [(p_start[i] + p_end[i]) / 2 for i in range(len(p_start))]
 
     if len(y_label) == 0 and len(p_label) == 0:
-        return 100, 100, 100
+        return 0, 0, 0
 
     # Count true and false positives within the overlapping area
     tp = 0
