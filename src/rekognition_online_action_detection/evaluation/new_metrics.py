@@ -928,6 +928,8 @@ def compute_point_level_accuracies(y_true, y_pred, threshold = 0, bg_class = Non
                 if not hits[jmin]:
                     tp += 1
                     hits[jmin] = 1
+                else:
+                    fp += 1
             else:
                 fp += 1
         else:
