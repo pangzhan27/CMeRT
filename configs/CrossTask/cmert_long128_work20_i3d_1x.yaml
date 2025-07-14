@@ -1,0 +1,61 @@
+DATA:
+  DATA_NAME: 'CrossTask'
+  DATA_INFO: 'data/data_info.json'
+  DATA_ROOT: 'data/CrossTask'
+INPUT:
+  MODALITY: 'twostream'
+  VISUAL_FEATURE: 'rgb_i3d'
+  MOTION_FEATURE: 'rgb_resnet152_audio'
+  OBJECT_FEATURE: 'rgb_i3d' # not used
+MODEL:
+  MODEL_NAME: 'CMeRT'
+  FEATURE_HEAD:
+    LINEAR_ENABLED: True
+    LINEAR_OUT_FEATURES: 2048
+  LSTR:
+    NUM_HEADS: 8
+    DIM_FEEDFORWARD: 2048
+    DROPOUT: 0.1
+    ACTIVATION: 'relu'
+    LONG_MEMORY_SECONDS: 128
+    LONG_MEMORY_SAMPLE_RATE: 1
+    LONG_MEMORY_INCLUDE_WORK: True
+    WORK_MEMORY_SECONDS: 20
+    WORK_MEMORY_SAMPLE_RATE: 1
+    CONTEXT_SECONDS: 10.0
+    FUTURE_SECONDS: 12
+    FUTURE_SAMPLE_RATE: 1
+    ANTICIPATION_SECONDS: 1
+    REFINE_TIMES: 1
+    ENC_MODULE: [
+      [16, 1, True], [32, 2, True]
+    ]
+    DEC_MODULE: [-1, 2, True]
+    GEN_MODULE: [ 12, 2, True ]
+    FUT_MODULE: [ [ 12, 1, True ], ]
+    V_N_CLASSIFIER: False
+    LOSS_WEIGHT_V: 1.
+    LOSS_WEIGHT_N: 1.
+    FUSION_WEIGHT_V: 1.
+    FUSION_WEIGHT_N: 1.
+  CRITERIONS: [['MCE', {'ignore_index': []}]]
+  PP_SIZE: 3
+DATA_LOADER:
+  BATCH_SIZE: 32
+  NUM_WORKERS: 4
+  PIN_MEMORY: True
+  TYPE: ''
+SOLVER:
+  NUM_EPOCHS: 15
+  OPTIMIZER: 'adam'
+  BASE_LR: 7e-05
+  WEIGHT_DECAY: 1e-5
+  SAVE_EVERY: 2
+  S1_W: 0.5
+  S2_W: 0.5
+  F_W: 0.5
+  SCHEDULER:
+    SCHEDULER_NAME: 'warmup_cosine'
+    WARMUP_FACTOR: 0.3
+    WARMUP_EPOCHS: 5.0
+    WARMUP_METHOD: 'linear'
